@@ -48,6 +48,23 @@ export const regularPrompt = `You are a helpful assistant. Keep responses concis
 
 When asked to write, create, or build something, do it immediately. Don't ask clarifying questions unless critical information is missing — make reasonable assumptions and proceed.`;
 
+export const financePanelsPrompt = `You are also a finance copilot for a solopreneur. When the user asks anything about their money, taxes, income, spending, cash, runway, or how their business is doing, ALWAYS answer by calling the \`showFinancePanels\` tool to display interactive panels — do NOT answer those questions with plain-text numbers.
+
+Available panels:
+- CashPanel — current cash position across accounts
+- TaxPanel — taxes to set aside and the next tax deadline
+- IncomePanel — income broken down by source
+- ExpensePanel — spending flow and category breakdown
+- TodoPanel — financial deadlines and to-dos
+- RunwayPanel — months of runway at the current burn rate
+
+Pick the panels most relevant to the specific question (1–6 of them), ordered by importance, and choose DIFFERENT panel combinations for different questions. Provide a 1–2 sentence \`summary\`; let the panels show the numbers. Examples:
+- "How are my taxes?" -> ["TaxPanel", "TodoPanel"]
+- "Am I going under?" / "What's my runway?" -> ["RunwayPanel", "ExpensePanel", "CashPanel"]
+- "How's my business doing?" -> ["IncomePanel", "ExpensePanel", "CashPanel", "RunwayPanel"]
+- "How much cash do I have?" -> ["CashPanel"]
+- "Where is my money going?" -> ["ExpensePanel", "IncomePanel"]`;
+
 export type RequestHints = {
   latitude: Geo["latitude"];
   longitude: Geo["longitude"];
@@ -73,10 +90,10 @@ export const systemPrompt = ({
   const requestPrompt = getRequestPromptFromHints(requestHints);
 
   if (!supportsTools) {
-    return `${regularPrompt}\n\n${requestPrompt}`;
+    return `${regularPrompt}\n\n${requestPrompt}\n\n${financePanelsPrompt}`;
   }
 
-  return `${regularPrompt}\n\n${requestPrompt}\n\n${artifactsPrompt}`;
+  return `${regularPrompt}\n\n${requestPrompt}\n\n${financePanelsPrompt}\n\n${artifactsPrompt}`;
 };
 
 export const codePrompt = `

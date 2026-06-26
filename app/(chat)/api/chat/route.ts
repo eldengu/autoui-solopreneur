@@ -24,6 +24,7 @@ import { createDocument } from "@/lib/ai/tools/create-document";
 import { editDocument } from "@/lib/ai/tools/edit-document";
 import { getWeather } from "@/lib/ai/tools/get-weather";
 import { requestSuggestions } from "@/lib/ai/tools/request-suggestions";
+import { showFinancePanels } from "@/lib/ai/tools/show-finance-panels";
 import { updateDocument } from "@/lib/ai/tools/update-document";
 import { isProductionEnvironment } from "@/lib/constants";
 import {
@@ -198,8 +199,9 @@ export async function POST(request: Request) {
           stopWhen: stepCountIs(5),
           experimental_activeTools:
             isReasoningModel && !supportsTools
-              ? []
+              ? ["showFinancePanels"]
               : [
+                  "showFinancePanels",
                   "getWeather",
                   "createDocument",
                   "editDocument",
@@ -215,6 +217,7 @@ export async function POST(request: Request) {
             }),
           },
           tools: {
+            showFinancePanels,
             getWeather,
             createDocument: createDocument({
               session,
