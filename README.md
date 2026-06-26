@@ -60,15 +60,12 @@ The system is built around a **renderer-agnostic JSON UI spec**. A panel is just
 | **Custom panels** | User-created panels from remixing existing ones. | `custom-panels.json` (runtime data) |
 
 ```
- catalog (vocabulary)  ─┐
-                        ├─►  json-render SPEC (pure JSON)  ─►  registry (React)  ─►  rendered UI
- panels + custom-panels ┘                       │
-                                                └─►  could also render on other platforms
-                                                     (e.g. a Flutter registry) — the spec
-                                                     carries no framework assumptions
+ catalog (vocabulary)  ─┬─►  json-render SPEC  ─►  React registry   ─►  web UI
+                        │        (pure JSON)    └─►  Flutter registry ─►  native/Flutter UI
+ panels + custom-panels ┘     the spec carries no framework assumptions
 ```
 
-**Why renderer-agnostic matters:** because a panel is just a JSON spec interpreted by a registry, the *same* spec could be rendered by a different registry on a different platform — a native Flutter renderer, an email/HTML renderer, etc. — without changing the catalog, the memory, or the model prompts. Today there's a React registry; tomorrow there could be others.
+**Why renderer-agnostic matters:** because a panel is just a JSON spec interpreted by a registry, the *same* spec is rendered by different registries on different platforms — without changing the catalog, the memory, or the model prompts. This repo proves it: there are **two full renderers** — the Next.js web app and a **Flutter app** (`flutter/`, on the `flutter-renderer` branch) — both driven by the same backend "brain." See [Flutter app](#flutter-app--a-second-renderer-on-the-same-brain).
 
 `memory.json` and `custom-panels.json` are **runtime data files, not source code** — the assistant writes to them through API routes, the same way it would write to a database.
 
@@ -89,6 +86,60 @@ The system is built around a **renderer-agnostic JSON UI spec**. A panel is just
 | **`/memory`** | The two-part memory, visualized: a declarative timeline of votes on the left, consolidated procedural scores on the right — so you can see facts build into habits. |
 
 A persistent left sidebar links **Chat**, **Catalog**, and **Memory**.
+
+---
+
+## Flutter app — a second renderer on the same brain
+
+The `flutter/` folder (on the **`flutter-renderer`** branch) is a **full Flutter app** that reuses the **exact same backend** as the web app — it only calls the existing HTTP endpoints (`/api/chat`, `/api/finance-feedback`, `/api/custom-panels`, plus a read-only `/api/memory`). Nothing about the model, the catalog, the memory, or the panel specs is duplicated server-side. Flutter is a new rendering **body** on the same **brain**, which is the whole point of the renderer-agnostic JSON spec.
+
+It implements all 10 primitives (Card, Stack, Grid, Metric, Badge, Text, BarGraph, LineGraph, ProgressBar, ListItem — charts included) as Flutter widgets, plus a recursive `SpecRenderer` that interprets the same `{root, elements}` specs the web registry does.
+
+Feature parity with the web app:
+
+- **Chat that assembles panels** — ask a finance question; Claude's selected panels stream back and render as polished Flutter widgets.
+- **Sidebar navigation** — Chat / Catalog / Memory, mirroring the web sidebar.
+- **Catalog screen** — every available panel (built-ins + custom) fetched live and rendered, with a "custom" badge.
+- **Memory screen** — the two-part memory in two columns: a **declarative** vote timeline and **procedural** scores per question type (Metric + BarGraph).
+- **Thumb up/down feedback** — under each chat panel, posting to `/api/finance-feedback` with a "Thank you" confirmation (updates the same `memory.json`).
+- **Panel remixing** — a "+" button opens a multi-select picker + instruction field that combines panels via `/api/custom-panels`; the new panel then appears in the Catalog.
+
+### Run the Flutter app
+
+Requires the [Flutter SDK](https://docs.flutter.dev/get-started/install). Keep the Next.js backend running (`pnpm dev` on port 3000), then:
+
+```bash
+cd flutter
+flutter build web --release
+node serve.mjs            # serves the build + proxies /api/* to the backend (avoids CORS)
+```
+
+Open **http://localhost:8090**. `serve.mjs` is a small dev harness that hosts the Flutter web build on the backend's origin and establishes the guest session, so the Flutter client just calls `/api/*` the same way the web app does.
+
+| Flutter screen | Screenshot |
+| --- | --- |
+| Chat (panels rendered as Flutter widgets) | `docs/flutter-demo.png`, `docs/flutter-charts.png` |
+| Sidebar nav (Chat / Catalog / Memory) | `docs/flutter-nav-chat.png`, `docs/flutter-nav-catalog.png`, `docs/flutter-nav-memory.png` |
+| Catalog (built-ins + custom) | `docs/flutter-catalog.png`, `docs/flutter-catalog-2.png` |
+| Memory (declarative + procedural) | `docs/flutter-memory.png` |
+| Thumb up/down feedback | `docs/flutter-feedback.png` |
+| Panel remix dialog | `docs/flutter-remix-dialog.png` |
+
+**Chat (panels as Flutter widgets)**
+
+![Flutter chat with finance panels](docs/flutter-demo.png)
+
+**Memory (declarative + procedural)**
+
+![Flutter memory screen](docs/flutter-memory.png)
+
+**Catalog (built-ins + custom)**
+
+![Flutter catalog screen](docs/flutter-catalog.png)
+
+**Combine panels (remix dialog)**
+
+![Flutter panel remix dialog](docs/flutter-remix-dialog.png)
 
 ---
 
