@@ -3,7 +3,7 @@ import NextAuth, { type DefaultSession } from "next-auth";
 import type { DefaultJWT } from "next-auth/jwt";
 import Credentials from "next-auth/providers/credentials";
 import { DUMMY_PASSWORD } from "@/lib/constants";
-import { createGuestUser, getUser } from "@/lib/db/queries";
+import { getUser } from "@/lib/db/queries";
 import { authConfig } from "./auth.config";
 
 export type UserType = "guest" | "regular";
@@ -72,9 +72,15 @@ export const {
     Credentials({
       id: "guest",
       credentials: {},
-      async authorize() {
-        const [guestUser] = await createGuestUser();
-        return { ...guestUser, type: "guest" };
+      // No-DB guest sign-in: returns a static in-memory guest user so the chat
+      // UI renders without a Postgres database. Persistence will move to
+      // memory.json later. See createGuestUser for the original DB-backed flow.
+      authorize() {
+        return {
+          id: "00000000-0000-0000-0000-000000000000",
+          email: "guest@local",
+          type: "guest" as const,
+        };
       },
     }),
   ],
