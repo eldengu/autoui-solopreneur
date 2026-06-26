@@ -53,6 +53,7 @@ import {
 } from "../ai-elements/prompt-input";
 import { Button } from "../ui/button";
 import { PaperclipIcon, StopIcon } from "./icons";
+import { PanelRemixButton } from "./panel-remix";
 import { PreviewAttachment } from "./preview-attachment";
 import {
   type SlashCommand,
@@ -522,6 +523,7 @@ function PureMultimodalInput({
               selectedModelId={selectedModelId}
               status={status}
             />
+            <PanelRemixButton />
             <ModelSelectorCompact
               onModelChange={onModelChange}
               selectedModelId={selectedModelId}

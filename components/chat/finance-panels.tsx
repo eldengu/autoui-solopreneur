@@ -10,7 +10,7 @@ import {
 import { ThumbsDown, ThumbsUp } from "lucide-react";
 import { type ComponentProps, useState } from "react";
 import { registry } from "@/lib/catalog/finance-registry";
-import { panels as catalogPanels } from "@/lib/catalog/panels";
+import { panels as catalogPanels, type PanelSpec } from "@/lib/catalog/panels";
 import { cn } from "@/lib/utils";
 
 type RendererSpec = ComponentProps<typeof Renderer>["spec"];
@@ -85,12 +85,30 @@ function PanelFeedback({
 export function FinancePanels({
   output,
 }: {
-  output: { question?: string; panels?: string[]; summary?: string } | undefined;
+  output:
+    | {
+        question?: string;
+        panels?: string[];
+        summary?: string;
+        specs?: { name: string; title?: string; spec: PanelSpec }[];
+      }
+    | undefined;
 }) {
-  const names = (output?.panels ?? []).filter((name) => specByName.has(name));
   const question = output?.question ?? "";
 
-  if (names.length === 0) {
+  // Prefer resolved specs from the tool (supports custom panels); fall back to
+  // looking built-in names up locally.
+  const resolved =
+    output?.specs && output.specs.length > 0
+      ? output.specs.map((s) => ({ name: s.name, spec: s.spec }))
+      : (output?.panels ?? [])
+          .filter((name) => specByName.has(name))
+          .map((name) => ({
+            name,
+            spec: specByName.get(name) as PanelSpec,
+          }));
+
+  if (resolved.length === 0) {
     return null;
   }
 
@@ -106,11 +124,11 @@ export function FinancePanels({
                 </p>
               )}
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                {names.map((name) => (
+                {resolved.map(({ name, spec }) => (
                   <div data-finance-panel={name} key={name}>
                     <Renderer
                       registry={registry}
-                      spec={specByName.get(name) as unknown as RendererSpec}
+                      spec={spec as unknown as RendererSpec}
                     />
                     <PanelFeedback panel={name} question={question} />
                   </div>

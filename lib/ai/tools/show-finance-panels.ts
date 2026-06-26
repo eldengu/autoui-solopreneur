@@ -1,7 +1,9 @@
 import { tool } from "ai";
 import { z } from "zod";
+import { getAvailablePanels } from "@/lib/catalog/custom-panels";
 
-// Panel names match the `title` field of each entry in lib/catalog/panels.ts.
+// Built-in panel names (match the `title` field of each entry in panels.ts).
+// Custom panels add more names at runtime, so the tool accepts any string.
 export const PANEL_NAMES = [
   "CashPanel",
   "TaxPanel",
@@ -26,12 +28,13 @@ export const showFinancePanels = tool({
           "(e.g. 'How are my taxes?'). Used to record per-question feedback."
       ),
     panels: z
-      .array(z.enum(PANEL_NAMES))
+      .array(z.string())
       .min(1)
-      .max(6)
+      .max(8)
       .describe(
-        "The finance panel component names to show, ordered by relevance. " +
-          "Pick different panels for different questions."
+        "The finance panel names to show, ordered by relevance. Use the " +
+          "available panel names (built-in or custom). Pick different panels " +
+          "for different questions."
       ),
     summary: z
       .string()
@@ -40,8 +43,15 @@ export const showFinancePanels = tool({
           "Do not restate every number — the panels display the details."
       ),
   }),
-  // The tool's structured input is echoed back as output so the client can map
-  // the panel names to json-render specs and render them in the conversation.
-  execute: ({ question, panels, summary }) =>
-    Promise.resolve({ question, panels, summary }),
+  // Resolve the selected panel names (built-in or custom) to their json-render
+  // specs so the client can render them in the conversation.
+  execute: async ({ question, panels, summary }) => {
+    const available = await getAvailablePanels();
+    const byName = new Map(available.map((p) => [p.name, p]));
+    const specs = panels
+      .map((name) => byName.get(name))
+      .filter((p): p is NonNullable<typeof p> => Boolean(p))
+      .map((p) => ({ name: p.name, title: p.title, spec: p.spec }));
+    return { question, panels, summary, specs };
+  },
 });

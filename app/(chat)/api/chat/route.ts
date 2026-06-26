@@ -19,6 +19,7 @@ import {
   getCapabilities,
 } from "@/lib/ai/models";
 import { type RequestHints, systemPrompt } from "@/lib/ai/prompts";
+import { getAvailablePanels } from "@/lib/catalog/custom-panels";
 import {
   formatProceduralForPrompt,
   getProceduralScores,
@@ -196,9 +197,21 @@ export async function POST(request: Request) {
     // Inject learned procedural scores so higher-rated panels are preferred
     // for similar future questions.
     const proceduralScores = await getProceduralScores();
+
+    // Expose custom (remixed) panels so showFinancePanels can select them.
+    const availablePanels = await getAvailablePanels();
+    const customPanels = availablePanels.filter((p) => p.custom);
+    const customPanelsPrompt =
+      customPanels.length > 0
+        ? `\n\nCustom panels created by the user (you may select these by name too when relevant):\n${customPanels
+            .map((p) => `- ${p.name}: ${p.title}`)
+            .join("\n")}`
+        : "";
+
     const systemPromptText =
       systemPrompt({ requestHints, supportsTools }) +
-      formatProceduralForPrompt(proceduralScores);
+      formatProceduralForPrompt(proceduralScores) +
+      customPanelsPrompt;
 
     const stream = createUIMessageStream({
       originalMessages: isToolApprovalFlow ? uiMessages : undefined,

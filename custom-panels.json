@@ -1,0 +1,94 @@
+[
+  {
+    "name": "CashRunwayPanel",
+    "title": "Cash & Runway",
+    "spec": {
+      "root": "card",
+      "elements": {
+        "card": {
+          "type": "Card",
+          "props": {
+            "title": "Cash & Runway",
+            "subtitle": "Position and burn rate"
+          },
+          "children": [
+            "stack"
+          ]
+        },
+        "stack": {
+          "type": "Stack",
+          "props": {
+            "direction": "col",
+            "gap": "md"
+          },
+          "children": [
+            "grid",
+            "projection",
+            "badge"
+          ]
+        },
+        "grid": {
+          "type": "Grid",
+          "props": {
+            "columns": 2,
+            "gap": "sm"
+          },
+          "children": [
+            "total",
+            "months"
+          ]
+        },
+        "total": {
+          "type": "Metric",
+          "props": {
+            "label": "Total cash",
+            "value": "$48,250",
+            "delta": "+$3,200 this month",
+            "trend": "up"
+          }
+        },
+        "months": {
+          "type": "Metric",
+          "props": {
+            "label": "Months of runway",
+            "value": "8.6 mo",
+            "hint": "Cash ÷ monthly burn"
+          }
+        },
+        "projection": {
+          "type": "LineGraph",
+          "props": {
+            "points": [
+              48250,
+              42650,
+              37050,
+              31450,
+              25850
+            ],
+            "labels": [
+              "Now",
+              "+1",
+              "+2",
+              "+3",
+              "+4"
+            ],
+            "color": "#0ea5e9"
+          }
+        },
+        "badge": {
+          "type": "Badge",
+          "props": {
+            "label": "Comfortable",
+            "tone": "positive"
+          }
+        }
+      }
+    },
+    "instruction": "Merge these two into one compact panel titled Cash & Runway. Show the total cash Metric, the months-of-runway Metric, and the runway projection LineGraph. Keep it concise.",
+    "sources": [
+      "CashPanel",
+      "RunwayPanel"
+    ],
+    "createdAt": "2026-06-26T19:55:09.336Z"
+  }
+]

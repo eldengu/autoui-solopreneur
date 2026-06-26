@@ -1,10 +1,10 @@
 import { z } from "zod";
-import { PANEL_NAMES } from "@/lib/ai/tools/show-finance-panels";
 import { recordFeedback } from "@/lib/memory/finance-memory";
 
 const bodySchema = z.object({
   question: z.string().min(1).max(500),
-  panel: z.enum(PANEL_NAMES),
+  // Any panel name (built-in or custom).
+  panel: z.string().min(1).max(100),
   vote: z.union([z.literal(1), z.literal(-1)]),
 });
 
