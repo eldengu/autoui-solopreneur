@@ -19,6 +19,10 @@ import {
   getCapabilities,
 } from "@/lib/ai/models";
 import { type RequestHints, systemPrompt } from "@/lib/ai/prompts";
+import {
+  formatProceduralForPrompt,
+  getProceduralScores,
+} from "@/lib/memory/finance-memory";
 import { getLanguageModel } from "@/lib/ai/providers";
 import { createDocument } from "@/lib/ai/tools/create-document";
 import { editDocument } from "@/lib/ai/tools/edit-document";
@@ -189,12 +193,19 @@ export async function POST(request: Request) {
 
     const modelMessages = await convertToModelMessages(uiMessages);
 
+    // Inject learned procedural scores so higher-rated panels are preferred
+    // for similar future questions.
+    const proceduralScores = await getProceduralScores();
+    const systemPromptText =
+      systemPrompt({ requestHints, supportsTools }) +
+      formatProceduralForPrompt(proceduralScores);
+
     const stream = createUIMessageStream({
       originalMessages: isToolApprovalFlow ? uiMessages : undefined,
       execute: async ({ writer: dataStream }) => {
         const result = streamText({
           model: getLanguageModel(chatModel),
-          system: systemPrompt({ requestHints, supportsTools }),
+          system: systemPromptText,
           messages: modelMessages,
           stopWhen: stepCountIs(5),
           experimental_activeTools:

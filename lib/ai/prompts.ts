@@ -58,7 +58,7 @@ Available panels:
 - TodoPanel — financial deadlines and to-dos
 - RunwayPanel — months of runway at the current burn rate
 
-Pick the panels most relevant to the specific question (1–6 of them), ordered by importance, and choose DIFFERENT panel combinations for different questions. Provide a 1–2 sentence \`summary\`; let the panels show the numbers. Examples:
+Always set \`question\` to a short canonical form of what the user asked. Pick the panels most relevant to the specific question (1–6 of them), ordered by importance, and choose DIFFERENT panel combinations for different questions. Provide a 1–2 sentence \`summary\`; let the panels show the numbers. Examples:
 - "How are my taxes?" -> ["TaxPanel", "TodoPanel"]
 - "Am I going under?" / "What's my runway?" -> ["RunwayPanel", "ExpensePanel", "CashPanel"]
 - "How's my business doing?" -> ["IncomePanel", "ExpensePanel", "CashPanel", "RunwayPanel"]
