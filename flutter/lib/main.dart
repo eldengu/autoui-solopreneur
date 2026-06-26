@@ -15,9 +15,253 @@ class AutoUiApp extends StatelessWidget {
       title: 'AutoUI — Solopreneur Finance',
       debugShowCheckedModeBanner: false,
       theme: buildTheme(),
-      home: const ChatScreen(),
+      home: const HomeShell(),
     );
   }
+}
+
+/// App shell: a persistent left sidebar (mirroring the web app) + the active
+/// screen. IndexedStack preserves each screen's state across navigation.
+class HomeShell extends StatefulWidget {
+  const HomeShell({super.key});
+  @override
+  State<HomeShell> createState() => _HomeShellState();
+}
+
+class _HomeShellState extends State<HomeShell> {
+  int _index = 0;
+
+  static const _titles = ['Chat', 'Catalog', 'Memory'];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      body: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _Sidebar(index: _index, onSelect: (i) => setState(() => _index = i)),
+          Expanded(
+            child: Column(
+              children: [
+                _TopBar(title: _titles[_index]),
+                Expanded(
+                  child: IndexedStack(
+                    index: _index,
+                    children: const [
+                      ChatView(),
+                      CatalogScreen(),
+                      MemoryScreen(),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TopBar extends StatelessWidget {
+  final String title;
+  const _TopBar({required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 52,
+      decoration: const BoxDecoration(
+        color: AppColors.card,
+        border: Border(bottom: BorderSide(color: AppColors.border)),
+      ),
+      alignment: Alignment.centerLeft,
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Text(
+        'AutoUI · Solopreneur Finance — $title',
+        style: const TextStyle(
+            fontSize: 15, fontWeight: FontWeight.w600, color: AppColors.foreground),
+      ),
+    );
+  }
+}
+
+class _Sidebar extends StatelessWidget {
+  final int index;
+  final ValueChanged<int> onSelect;
+  const _Sidebar({required this.index, required this.onSelect});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 232,
+      decoration: const BoxDecoration(
+        color: AppColors.card,
+        border: Border(right: BorderSide(color: AppColors.border)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
+            child: Row(
+              children: [
+                Container(
+                  width: 28,
+                  height: 28,
+                  decoration: BoxDecoration(
+                    color: AppColors.primary,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  alignment: Alignment.center,
+                  child: const Icon(Icons.bolt, size: 16, color: Colors.white),
+                ),
+                const SizedBox(width: 10),
+                const Text('AutoUI',
+                    style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.foreground)),
+              ],
+            ),
+          ),
+          const Divider(height: 1, color: AppColors.border),
+          const SizedBox(height: 8),
+          _NavItem(
+            icon: Icons.chat_bubble_outline,
+            label: 'Chat',
+            selected: index == 0,
+            onTap: () => onSelect(0),
+          ),
+          _NavItem(
+            icon: Icons.grid_view_rounded,
+            label: 'Catalog',
+            selected: index == 1,
+            onTap: () => onSelect(1),
+          ),
+          _NavItem(
+            icon: Icons.psychology_outlined,
+            label: 'Memory',
+            selected: index == 2,
+            onTap: () => onSelect(2),
+          ),
+          const Spacer(),
+          const Padding(
+            padding: EdgeInsets.all(16),
+            child: Text('guest@local',
+                style: TextStyle(fontSize: 12, color: AppColors.mutedForeground)),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _NavItem extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+  const _NavItem({
+    required this.icon,
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      child: Material(
+        color: selected ? AppColors.muted : Colors.transparent,
+        borderRadius: BorderRadius.circular(8),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(8),
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
+            child: Row(
+              children: [
+                Icon(icon,
+                    size: 18,
+                    color:
+                        selected ? AppColors.foreground : AppColors.mutedForeground),
+                const SizedBox(width: 10),
+                Text(label,
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
+                      color:
+                          selected ? AppColors.foreground : AppColors.mutedForeground,
+                    )),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ---- placeholder screens (filled in next steps) ---------------------------
+
+class CatalogScreen extends StatelessWidget {
+  const CatalogScreen({super.key});
+  @override
+  Widget build(BuildContext context) => const _Placeholder(
+        icon: Icons.grid_view_rounded,
+        title: 'Catalog',
+        body: 'The panel gallery will appear here.',
+      );
+}
+
+class MemoryScreen extends StatelessWidget {
+  const MemoryScreen({super.key});
+  @override
+  Widget build(BuildContext context) => const _Placeholder(
+        icon: Icons.psychology_outlined,
+        title: 'Memory',
+        body: 'Declarative log and procedural scores will appear here.',
+      );
+}
+
+class _Placeholder extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String body;
+  const _Placeholder({required this.icon, required this.title, required this.body});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 40, color: AppColors.mutedForeground),
+          const SizedBox(height: 12),
+          Text(title,
+              style: const TextStyle(
+                  fontSize: 18, fontWeight: FontWeight.w600, color: AppColors.foreground)),
+          const SizedBox(height: 6),
+          Text(body,
+              style: const TextStyle(fontSize: 13, color: AppColors.mutedForeground)),
+          const SizedBox(height: 6),
+          const Text('Coming soon',
+              style: TextStyle(fontSize: 12, color: AppColors.mutedForeground)),
+        ],
+      ),
+    );
+  }
+}
+
+// ---- Chat screen (body-only; lives inside the shell) ----------------------
+
+class ChatView extends StatefulWidget {
+  const ChatView({super.key});
+  @override
+  State<ChatView> createState() => _ChatViewState();
 }
 
 class _Msg {
@@ -32,13 +276,7 @@ class _Msg {
   _Msg.assistant({this.text, this.summary, this.specs = const []}) : user = false;
 }
 
-class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key});
-  @override
-  State<ChatScreen> createState() => _ChatScreenState();
-}
-
-class _ChatScreenState extends State<ChatScreen> {
+class _ChatViewState extends State<ChatView> {
   final _api = BackendApi(); // same-origin
   final _controller = TextEditingController();
   final _scroll = ScrollController();
@@ -64,9 +302,7 @@ class _ChatScreenState extends State<ChatScreen> {
         ));
       });
     } catch (e) {
-      setState(() {
-        _messages.add(_Msg.assistant(text: 'Something went wrong: $e'));
-      });
+      setState(() => _messages.add(_Msg.assistant(text: 'Something went wrong: $e')));
     } finally {
       setState(() => _loading = false);
       _scrollToEnd();
@@ -84,28 +320,11 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        backgroundColor: AppColors.card,
-        surfaceTintColor: AppColors.card,
-        elevation: 0.5,
-        title: const Text('AutoUI · Solopreneur Finance',
-            style: TextStyle(
-                fontSize: 15, fontWeight: FontWeight.w600, color: AppColors.foreground)),
-        bottom: const PreferredSize(
-          preferredSize: Size.fromHeight(1),
-          child: Divider(height: 1, color: AppColors.border),
-        ),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: _messages.isEmpty ? _empty() : _list(),
-          ),
-          _composer(),
-        ],
-      ),
+    return Column(
+      children: [
+        Expanded(child: _messages.isEmpty ? _empty() : _list()),
+        _composer(),
+      ],
     );
   }
 
@@ -213,10 +432,7 @@ class _ChatScreenState extends State<ChatScreen> {
         padding: EdgeInsets.only(bottom: 16),
         child: Row(
           children: [
-            SizedBox(
-                width: 16,
-                height: 16,
-                child: CircularProgressIndicator(strokeWidth: 2)),
+            SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)),
             SizedBox(width: 10),
             Text('Assembling panels…',
                 style: TextStyle(fontSize: 13, color: AppColors.mutedForeground)),
@@ -274,8 +490,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     backgroundColor: AppColors.foreground,
                     foregroundColor: AppColors.card,
                     padding: EdgeInsets.zero,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                   ),
                   child: const Icon(Icons.arrow_upward, size: 18),
                 ),
