@@ -1,59 +1,34 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
 
 import 'api.dart';
 import 'render.dart';
 import 'theme.dart';
 
-/// Catalog screen: fetches the available-panel LIST (names + custom flags) from
-/// the existing /api/custom-panels endpoint and renders each with the existing
-/// SpecRenderer, marking custom ones with a "custom" badge — mirroring web
-/// /catalog-test. Panel specs come from a bundled catalog asset, so the backend
-/// is left unchanged.
+/// Catalog screen: fetches all available panels (built-ins + custom) WITH their
+/// specs live from the existing /api/custom-panels endpoint and renders each
+/// with the existing SpecRenderer, marking custom ones with a "custom" badge —
+/// mirroring web /catalog-test. Fully dynamic: panels created at runtime appear.
 class CatalogScreen extends StatefulWidget {
   const CatalogScreen({super.key});
   @override
   State<CatalogScreen> createState() => _CatalogScreenState();
 }
 
-class _CatalogData {
-  final List<CatalogPanel> panels;
-  final Map<String, Map<String, dynamic>> specs;
-  _CatalogData(this.panels, this.specs);
-}
-
 class _CatalogScreenState extends State<CatalogScreen> {
   final _api = BackendApi();
-  late Future<_CatalogData> _future;
+  late Future<List<CatalogPanel>> _future;
 
   @override
   void initState() {
     super.initState();
-    _future = _load();
+    _future = _api.fetchCatalog();
   }
 
-  Future<_CatalogData> _load() async {
-    final panelsFut = _api.fetchCatalog();
-    final assetFut = rootBundle.loadString('assets/panel_specs.json');
-    final panels = await panelsFut;
-    var assetStr = await assetFut;
-    if (assetStr.isNotEmpty && assetStr.codeUnitAt(0) == 0xFEFF) {
-      assetStr = assetStr.substring(1);
-    }
-    final raw = jsonDecode(assetStr) as Map<String, dynamic>;
-    final specs = raw.map(
-      (k, v) => MapEntry(k, (v as Map).cast<String, dynamic>()),
-    );
-    return _CatalogData(panels, specs);
-  }
-
-  void _reload() => setState(() => _future = _load());
+  void _reload() => setState(() => _future = _api.fetchCatalog());
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<_CatalogData>(
+    return FutureBuilder<List<CatalogPanel>>(
       future: _future,
       builder: (context, snap) {
         if (snap.connectionState == ConnectionState.waiting) {
@@ -78,33 +53,51 @@ class _CatalogScreenState extends State<CatalogScreen> {
             ),
           );
         }
-        final data = snap.data!;
-        return SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text('Finance Catalog — Panel Preview',
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.foreground)),
-              const SizedBox(height: 6),
-              const Text(
-                'Built-in panels plus any custom panels you remixed, rendered '
-                'from json-render specs by the same SpecRenderer as the chat.',
-                style: TextStyle(fontSize: 13, color: AppColors.mutedForeground),
-              ),
-              const SizedBox(height: 20),
-              _grid(data),
-            ],
+        final panels = snap.data ?? const [];
+        return RefreshIndicator(
+          onRefresh: () async => _reload(),
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Expanded(
+                      child: Text('Finance Catalog — Panel Preview',
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.foreground)),
+                    ),
+                    IconButton(
+                      tooltip: 'Refresh',
+                      onPressed: _reload,
+                      icon: const Icon(Icons.refresh, size: 18),
+                      color: AppColors.mutedForeground,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                const Text(
+                  'Built-in panels plus any custom panels you remixed, fetched '
+                  'live from /api/custom-panels and rendered from json-render '
+                  'specs by the same SpecRenderer as the chat.',
+                  style: TextStyle(fontSize: 13, color: AppColors.mutedForeground),
+                ),
+                const SizedBox(height: 20),
+                _grid(panels),
+              ],
+            ),
           ),
         );
       },
     );
   }
 
-  Widget _grid(_CatalogData data) {
+  Widget _grid(List<CatalogPanel> panels) {
     return LayoutBuilder(builder: (context, c) {
       const gap = 20.0;
       final columns = c.maxWidth >= 1080
@@ -117,10 +110,10 @@ class _CatalogScreenState extends State<CatalogScreen> {
         spacing: gap,
         runSpacing: gap,
         children: [
-          for (final p in data.panels)
+          for (final p in panels)
             SizedBox(
               width: itemW > 0 ? itemW : c.maxWidth,
-              child: _PanelCard(panel: p, spec: data.specs[p.name]),
+              child: _PanelCard(panel: p),
             ),
         ],
       );
@@ -130,8 +123,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
 
 class _PanelCard extends StatelessWidget {
   final CatalogPanel panel;
-  final Map<String, dynamic>? spec;
-  const _PanelCard({required this.panel, required this.spec});
+  const _PanelCard({required this.panel});
 
   @override
   Widget build(BuildContext context) {
@@ -163,19 +155,7 @@ class _PanelCard extends StatelessWidget {
             ],
           ),
         ),
-        if (spec != null)
-          SpecRenderer(spec: spec!)
-        else
-          Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: AppColors.card,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppColors.border),
-            ),
-            child: const Text('Open this panel in Chat to view it.',
-                style: TextStyle(fontSize: 13, color: AppColors.mutedForeground)),
-          ),
+        SpecRenderer(spec: panel.spec),
       ],
     );
   }
