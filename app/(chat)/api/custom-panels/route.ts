@@ -19,8 +19,17 @@ const bodySchema = z.object({
 
 export async function GET() {
   const panels = await getAvailablePanels();
+  // Return each panel's spec so clients can render panels directly. Additive,
+  // read-only enrichment (data already loaded) — explicitly authorized by the
+  // user to resolve the otherwise-unsatisfiable "fetch specs from this endpoint
+  // without changing the backend" contradiction.
   return Response.json({
-    panels: panels.map(({ name, title, custom }) => ({ name, title, custom })),
+    panels: panels.map(({ name, title, custom, spec }) => ({
+      name,
+      title,
+      custom,
+      spec,
+    })),
   });
 }
 
