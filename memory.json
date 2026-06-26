@@ -1,4 +1,110 @@
 {
-  "declarative": [],
-  "procedural": {}
+  "declarative": [
+    {
+      "question": "How are my taxes?",
+      "questionType": "taxes",
+      "panel": "TaxPanel",
+      "vote": 1,
+      "timestamp": "2026-06-26T19:23:37.726Z"
+    },
+    {
+      "question": "How are my taxes?",
+      "questionType": "taxes",
+      "panel": "TodoPanel",
+      "vote": -1,
+      "timestamp": "2026-06-26T19:23:41.408Z"
+    },
+    {
+      "question": "How are my taxes?",
+      "questionType": "taxes",
+      "panel": "TaxPanel",
+      "vote": 1,
+      "timestamp": "2026-06-26T19:26:15.397Z"
+    },
+    {
+      "question": "How are my taxes this quarter?",
+      "questionType": "taxes",
+      "panel": "TaxPanel",
+      "vote": 1,
+      "timestamp": "2026-06-26T19:26:15.427Z"
+    },
+    {
+      "question": "Tax situation?",
+      "questionType": "taxes",
+      "panel": "TaxPanel",
+      "vote": 1,
+      "timestamp": "2026-06-26T19:26:15.481Z"
+    },
+    {
+      "question": "How are my taxes?",
+      "questionType": "taxes",
+      "panel": "TodoPanel",
+      "vote": 1,
+      "timestamp": "2026-06-26T19:26:15.510Z"
+    },
+    {
+      "question": "Any tax deadlines?",
+      "questionType": "taxes",
+      "panel": "TodoPanel",
+      "vote": 1,
+      "timestamp": "2026-06-26T19:26:15.538Z"
+    },
+    {
+      "question": "Am I going under?",
+      "questionType": "runway",
+      "panel": "RunwayPanel",
+      "vote": 1,
+      "timestamp": "2026-06-26T19:26:15.565Z"
+    },
+    {
+      "question": "What is my runway?",
+      "questionType": "runway",
+      "panel": "RunwayPanel",
+      "vote": 1,
+      "timestamp": "2026-06-26T19:26:15.592Z"
+    },
+    {
+      "question": "Am I going under?",
+      "questionType": "runway",
+      "panel": "ExpensePanel",
+      "vote": 1,
+      "timestamp": "2026-06-26T19:26:15.618Z"
+    },
+    {
+      "question": "How is my business doing?",
+      "questionType": "overview",
+      "panel": "IncomePanel",
+      "vote": 1,
+      "timestamp": "2026-06-26T19:26:15.645Z"
+    },
+    {
+      "question": "How is my business doing?",
+      "questionType": "overview",
+      "panel": "ExpensePanel",
+      "vote": 1,
+      "timestamp": "2026-06-26T19:26:15.670Z"
+    },
+    {
+      "question": "How is my business doing?",
+      "questionType": "overview",
+      "panel": "CashPanel",
+      "vote": -1,
+      "timestamp": "2026-06-26T19:26:15.696Z"
+    }
+  ],
+  "procedural": {
+    "taxes": {
+      "TaxPanel": 4,
+      "TodoPanel": 1
+    },
+    "runway": {
+      "RunwayPanel": 2,
+      "ExpensePanel": 1
+    },
+    "overview": {
+      "IncomePanel": 1,
+      "ExpensePanel": 1,
+      "CashPanel": -1
+    }
+  }
 }
