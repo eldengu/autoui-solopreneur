@@ -124,11 +124,11 @@ This project talks to **Anthropic Claude directly** via [`@ai-sdk/anthropic`](ht
 
 A full walkthrough: ask **"How are my taxes?"** → panels render → thumb up → ask **"Am I going under?"** → different panels → combine two panels into a new custom one → open **/memory** to see the learned declarative + procedural memory.
 
-<video src="https://github.com/eldengu/autoui-solopreneur/raw/main/docs/demo.mp4" controls muted width="100%"></video>
-
 [![Watch the demo walkthrough](docs/screenshot-chat.png)](https://github.com/eldengu/autoui-solopreneur/raw/main/docs/demo.mp4)
 
-> If the player above doesn't load inline, click the image to play or download the video (`docs/demo.mp4`).
+▶ **[Watch / download the demo video](https://github.com/eldengu/autoui-solopreneur/raw/main/docs/demo.mp4)** &nbsp;(`docs/demo.mp4`)
+
+> Click the image above to play the recorded walkthrough.
 
 ## Screenshots
 
