@@ -106,6 +106,21 @@ class BackendApi {
     return FinanceMemory(decl, proc);
   }
 
+  /// Record thumb up/down feedback for a panel via the existing endpoint.
+  Future<bool> sendFeedback({
+    required String question,
+    required String panel,
+    required int vote,
+  }) async {
+    await ensureGuest();
+    final res = await _client.post(
+      _uri('/api/finance-feedback'),
+      headers: {'content-type': 'application/json'},
+      body: jsonEncode({'question': question, 'panel': panel, 'vote': vote}),
+    );
+    return res.statusCode == 200;
+  }
+
   Future<ChatResult> sendMessage(String text) async {
     await ensureGuest();
     final body = jsonEncode({

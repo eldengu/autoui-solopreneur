@@ -220,12 +220,15 @@ class _Msg {
   final bool user;
   final String? text;
   final String? summary;
+  final String? question; // the user's question this answer responded to
   final List<PanelSpec> specs;
   _Msg.user(this.text)
       : user = true,
         summary = null,
+        question = null,
         specs = const [];
-  _Msg.assistant({this.text, this.summary, this.specs = const []}) : user = false;
+  _Msg.assistant({this.text, this.summary, this.question, this.specs = const []})
+      : user = false;
 }
 
 class _ChatViewState extends State<ChatView> {
@@ -251,6 +254,7 @@ class _ChatViewState extends State<ChatView> {
           summary: res.summary,
           text: res.specs.isEmpty ? res.text : null,
           specs: res.specs,
+          question: q,
         ));
       });
     } catch (e) {
@@ -373,7 +377,17 @@ class _ChatViewState extends State<ChatView> {
           for (var i = 0; i < m.specs.length; i++)
             Padding(
               padding: EdgeInsets.only(bottom: i == m.specs.length - 1 ? 0 : 12),
-              child: SpecRenderer(spec: m.specs[i].spec),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SpecRenderer(spec: m.specs[i].spec),
+                  _PanelFeedback(
+                    api: _api,
+                    question: m.question ?? '',
+                    panel: m.specs[i].name,
+                  ),
+                ],
+              ),
             ),
         ],
       ),
@@ -450,6 +464,85 @@ class _ChatViewState extends State<ChatView> {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// Thumb up/down feedback under a panel — posts to /api/finance-feedback and
+/// shows a brief "Thank you" confirmation, like the web app.
+class _PanelFeedback extends StatefulWidget {
+  final BackendApi api;
+  final String question;
+  final String panel;
+  const _PanelFeedback({
+    required this.api,
+    required this.question,
+    required this.panel,
+  });
+
+  @override
+  State<_PanelFeedback> createState() => _PanelFeedbackState();
+}
+
+class _PanelFeedbackState extends State<_PanelFeedback> {
+  int? _vote;
+  bool _pending = false;
+
+  Future<void> _send(int value) async {
+    if (_pending) return;
+    setState(() {
+      _pending = true;
+      _vote = value;
+    });
+    try {
+      await widget.api.sendFeedback(
+        question: widget.question,
+        panel: widget.panel,
+        vote: value,
+      );
+    } catch (_) {
+      // keep optimistic selection
+    } finally {
+      if (mounted) setState(() => _pending = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 6),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(right: 6),
+            child: Text(_vote != null ? 'Thank you for the feedback' : 'Helpful?',
+                style: const TextStyle(fontSize: 11, color: AppColors.mutedForeground)),
+          ),
+          _voteButton(1, Icons.thumb_up_outlined, AppColors.toneText['positive']!),
+          const SizedBox(width: 4),
+          _voteButton(-1, Icons.thumb_down_outlined, AppColors.toneText['danger']!),
+        ],
+      ),
+    );
+  }
+
+  Widget _voteButton(int value, IconData icon, Color activeColor) {
+    final active = _vote == value;
+    return InkWell(
+      borderRadius: BorderRadius.circular(6),
+      onTap: _pending ? null : () => _send(value),
+      child: Container(
+        padding: const EdgeInsets.all(5),
+        decoration: BoxDecoration(
+          border: Border.all(
+              color: active ? activeColor : AppColors.border),
+          borderRadius: BorderRadius.circular(6),
+          color: active ? activeColor.withValues(alpha: 0.1) : Colors.transparent,
+        ),
+        child: Icon(icon,
+            size: 14, color: active ? activeColor : AppColors.mutedForeground),
       ),
     );
   }
