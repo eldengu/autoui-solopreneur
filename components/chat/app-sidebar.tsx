@@ -1,6 +1,8 @@
 "use client";
 
 import {
+  BrainIcon,
+  LayoutGridIcon,
   MessageSquareIcon,
   PanelLeftIcon,
   PenSquareIcon,
@@ -115,6 +117,33 @@ export function AppSidebar({ user }: { user: User | undefined }) {
                   >
                     <PenSquareIcon className="size-4" />
                     <span className="font-medium">New chat</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton
+                    asChild
+                    className="h-8 rounded-lg text-[13px] text-sidebar-foreground/70 transition-colors duration-150 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
+                    tooltip="Catalog"
+                  >
+                    <Link
+                      href="/catalog-test"
+                      onClick={() => setOpenMobile(false)}
+                    >
+                      <LayoutGridIcon className="size-4" />
+                      <span className="font-medium">Catalog</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton
+                    asChild
+                    className="h-8 rounded-lg text-[13px] text-sidebar-foreground/70 transition-colors duration-150 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
+                    tooltip="Memory"
+                  >
+                    <Link href="/memory" onClick={() => setOpenMobile(false)}>
+                      <BrainIcon className="size-4" />
+                      <span className="font-medium">Memory</span>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
                 {user && (
