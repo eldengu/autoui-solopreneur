@@ -18,17 +18,17 @@ class ChatResult {
   ChatResult({this.summary, this.text, this.specs = const []});
 }
 
-/// One catalog entry: a panel that's available to the app (built-in or custom).
+/// One catalog entry from the backend list (name/title/custom). The spec is
+/// resolved client-side from the bundled catalog asset (the backend's list
+/// endpoint does not return specs and is left unchanged).
 class CatalogPanel {
   final String name;
   final String title;
   final bool custom;
-  final Map<String, dynamic> spec;
   CatalogPanel({
     required this.name,
     required this.title,
     required this.custom,
-    required this.spec,
   });
 }
 
@@ -72,7 +72,6 @@ class BackendApi {
         name: m['name']?.toString() ?? '',
         title: m['title']?.toString() ?? '',
         custom: m['custom'] == true,
-        spec: (m['spec'] as Map?)?.cast<String, dynamic>() ?? <String, dynamic>{},
       );
     }).toList();
   }

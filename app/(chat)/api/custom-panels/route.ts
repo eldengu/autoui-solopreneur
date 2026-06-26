@@ -20,12 +20,7 @@ const bodySchema = z.object({
 export async function GET() {
   const panels = await getAvailablePanels();
   return Response.json({
-    panels: panels.map(({ name, title, custom, spec }) => ({
-      name,
-      title,
-      custom,
-      spec,
-    })),
+    panels: panels.map(({ name, title, custom }) => ({ name, title, custom })),
   });
 }
 

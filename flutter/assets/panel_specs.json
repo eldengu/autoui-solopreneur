@@ -1,0 +1,626 @@
+{
+    "CashPanel":  {
+                      "root":  "card",
+                      "elements":  {
+                                       "card":  {
+                                                    "type":  "Card",
+                                                    "props":  {
+                                                                  "title":  "Cash Position",
+                                                                  "subtitle":  "All accounts"
+                                                              },
+                                                    "children":  [
+                                                                     "stack"
+                                                                 ]
+                                                },
+                                       "stack":  {
+                                                     "type":  "Stack",
+                                                     "props":  {
+                                                                   "direction":  "col",
+                                                                   "gap":  "md"
+                                                               },
+                                                     "children":  [
+                                                                      "total",
+                                                                      "grid",
+                                                                      "trend",
+                                                                      "badge"
+                                                                  ]
+                                                 },
+                                       "total":  {
+                                                     "type":  "Metric",
+                                                     "props":  {
+                                                                   "label":  "Total cash",
+                                                                   "value":  "$48,250",
+                                                                   "delta":  "+$3,200 this month",
+                                                                   "trend":  "up"
+                                                               }
+                                                 },
+                                       "grid":  {
+                                                    "type":  "Grid",
+                                                    "props":  {
+                                                                  "columns":  2,
+                                                                  "gap":  "sm"
+                                                              },
+                                                    "children":  [
+                                                                     "checking",
+                                                                     "savings"
+                                                                 ]
+                                                },
+                                       "checking":  {
+                                                        "type":  "Metric",
+                                                        "props":  {
+                                                                      "label":  "Checking",
+                                                                      "value":  "$32,100"
+                                                                  }
+                                                    },
+                                       "savings":  {
+                                                       "type":  "Metric",
+                                                       "props":  {
+                                                                     "label":  "Savings",
+                                                                     "value":  "$16,150"
+                                                                 }
+                                                   },
+                                       "trend":  {
+                                                     "type":  "LineGraph",
+                                                     "props":  {
+                                                                   "points":  [
+                                                                                  38000,
+                                                                                  41200,
+                                                                                  39800,
+                                                                                  43500,
+                                                                                  45050,
+                                                                                  48250
+                                                                              ],
+                                                                   "labels":  [
+                                                                                  "Jan",
+                                                                                  "Feb",
+                                                                                  "Mar",
+                                                                                  "Apr",
+                                                                                  "May",
+                                                                                  "Jun"
+                                                                              ]
+                                                               }
+                                                 },
+                                       "badge":  {
+                                                     "type":  "Badge",
+                                                     "props":  {
+                                                                   "label":  "Healthy",
+                                                                   "tone":  "positive"
+                                                               }
+                                                 }
+                                   }
+                  },
+    "TaxPanel":  {
+                     "root":  "card",
+                     "elements":  {
+                                      "card":  {
+                                                   "type":  "Card",
+                                                   "props":  {
+                                                                 "title":  "Tax to Set Aside",
+                                                                 "subtitle":  "2026 estimated"
+                                                             },
+                                                   "children":  [
+                                                                    "stack"
+                                                                ]
+                                               },
+                                      "stack":  {
+                                                    "type":  "Stack",
+                                                    "props":  {
+                                                                  "direction":  "col",
+                                                                  "gap":  "md"
+                                                              },
+                                                    "children":  [
+                                                                     "setaside",
+                                                                     "progress",
+                                                                     "grid",
+                                                                     "badge"
+                                                                 ]
+                                                },
+                                      "setaside":  {
+                                                       "type":  "Metric",
+                                                       "props":  {
+                                                                     "label":  "Set aside now",
+                                                                     "value":  "$9,640",
+                                                                     "hint":  "≈ 25% of YTD income"
+                                                                 }
+                                                   },
+                                      "progress":  {
+                                                       "type":  "ProgressBar",
+                                                       "props":  {
+                                                                     "value":  9640,
+                                                                     "max":  12000,
+                                                                     "label":  "Reserved vs estimated owed",
+                                                                     "tone":  "warning"
+                                                                 }
+                                                   },
+                                      "grid":  {
+                                                   "type":  "Grid",
+                                                   "props":  {
+                                                                 "columns":  2,
+                                                                 "gap":  "sm"
+                                                             },
+                                                   "children":  [
+                                                                    "federal",
+                                                                    "state"
+                                                                ]
+                                               },
+                                      "federal":  {
+                                                      "type":  "Metric",
+                                                      "props":  {
+                                                                    "label":  "Federal est.",
+                                                                    "value":  "$7,200"
+                                                                }
+                                                  },
+                                      "state":  {
+                                                    "type":  "Metric",
+                                                    "props":  {
+                                                                  "label":  "State est.",
+                                                                  "value":  "$2,440"
+                                                              }
+                                                },
+                                      "badge":  {
+                                                    "type":  "Badge",
+                                                    "props":  {
+                                                                  "label":  "Q2 due Jun 15",
+                                                                  "tone":  "warning"
+                                                              }
+                                                }
+                                  }
+                 },
+    "IncomePanel":  {
+                        "root":  "card",
+                        "elements":  {
+                                         "card":  {
+                                                      "type":  "Card",
+                                                      "props":  {
+                                                                    "title":  "Income by Source",
+                                                                    "subtitle":  "May 2026"
+                                                                },
+                                                      "children":  [
+                                                                       "stack"
+                                                                   ]
+                                                  },
+                                         "stack":  {
+                                                       "type":  "Stack",
+                                                       "props":  {
+                                                                     "direction":  "col",
+                                                                     "gap":  "md"
+                                                                 },
+                                                       "children":  [
+                                                                        "mtd",
+                                                                        "bars",
+                                                                        "note"
+                                                                    ]
+                                                   },
+                                         "mtd":  {
+                                                     "type":  "Metric",
+                                                     "props":  {
+                                                                   "label":  "MTD income",
+                                                                   "value":  "$18,400",
+                                                                   "delta":  "+12% vs last month",
+                                                                   "trend":  "up"
+                                                               }
+                                                 },
+                                         "bars":  {
+                                                      "type":  "BarGraph",
+                                                      "props":  {
+                                                                    "unit":  "$",
+                                                                    "data":  [
+                                                                                 {
+                                                                                     "label":  "Consulting",
+                                                                                     "value":  9800,
+                                                                                     "color":  "#6366f1"
+                                                                                 },
+                                                                                 {
+                                                                                     "label":  "Product sales",
+                                                                                     "value":  5200,
+                                                                                     "color":  "#10b981"
+                                                                                 },
+                                                                                 {
+                                                                                     "label":  "Affiliate",
+                                                                                     "value":  2100,
+                                                                                     "color":  "#f59e0b"
+                                                                                 },
+                                                                                 {
+                                                                                     "label":  "Other",
+                                                                                     "value":  1300,
+                                                                                     "color":  "#64748b"
+                                                                                 }
+                                                                             ]
+                                                                }
+                                                  },
+                                         "note":  {
+                                                      "type":  "Text",
+                                                      "props":  {
+                                                                    "content":  "4 active revenue streams",
+                                                                    "muted":  true,
+                                                                    "size":  "sm"
+                                                                }
+                                                  }
+                                     }
+                    },
+    "ExpensePanel":  {
+                         "root":  "card",
+                         "elements":  {
+                                          "card":  {
+                                                       "type":  "Card",
+                                                       "props":  {
+                                                                     "title":  "Spending Flow",
+                                                                     "subtitle":  "May 2026"
+                                                                 },
+                                                       "children":  [
+                                                                        "stack"
+                                                                    ]
+                                                   },
+                                          "stack":  {
+                                                        "type":  "Stack",
+                                                        "props":  {
+                                                                      "direction":  "col",
+                                                                      "gap":  "md"
+                                                                  },
+                                                        "children":  [
+                                                                         "mtd",
+                                                                         "trend",
+                                                                         "grid",
+                                                                         "badge"
+                                                                     ]
+                                                    },
+                                          "mtd":  {
+                                                      "type":  "Metric",
+                                                      "props":  {
+                                                                    "label":  "MTD spend",
+                                                                    "value":  "$7,920",
+                                                                    "delta":  "-4% vs last month",
+                                                                    "trend":  "down"
+                                                                }
+                                                  },
+                                          "trend":  {
+                                                        "type":  "LineGraph",
+                                                        "props":  {
+                                                                      "points":  [
+                                                                                     2100,
+                                                                                     1850,
+                                                                                     2400,
+                                                                                     1570
+                                                                                 ],
+                                                                      "labels":  [
+                                                                                     "W1",
+                                                                                     "W2",
+                                                                                     "W3",
+                                                                                     "W4"
+                                                                                 ],
+                                                                      "color":  "#f43f5e"
+                                                                  }
+                                                    },
+                                          "grid":  {
+                                                       "type":  "Grid",
+                                                       "props":  {
+                                                                     "columns":  3,
+                                                                     "gap":  "sm"
+                                                                 },
+                                                       "children":  [
+                                                                        "software",
+                                                                        "contractors",
+                                                                        "ads"
+                                                                    ]
+                                                   },
+                                          "software":  {
+                                                           "type":  "Metric",
+                                                           "props":  {
+                                                                         "label":  "Software",
+                                                                         "value":  "$1,240"
+                                                                     }
+                                                       },
+                                          "contractors":  {
+                                                              "type":  "Metric",
+                                                              "props":  {
+                                                                            "label":  "Contractors",
+                                                                            "value":  "$3,500"
+                                                                        }
+                                                          },
+                                          "ads":  {
+                                                      "type":  "Metric",
+                                                      "props":  {
+                                                                    "label":  "Ads",
+                                                                    "value":  "$980"
+                                                                }
+                                                  },
+                                          "badge":  {
+                                                        "type":  "Badge",
+                                                        "props":  {
+                                                                      "label":  "Under budget",
+                                                                      "tone":  "positive"
+                                                                  }
+                                                    }
+                                      }
+                     },
+    "TodoPanel":  {
+                      "root":  "card",
+                      "elements":  {
+                                       "card":  {
+                                                    "type":  "Card",
+                                                    "props":  {
+                                                                  "title":  "Deadlines \u0026 To-Dos",
+                                                                  "subtitle":  "Next 30 days"
+                                                              },
+                                                    "children":  [
+                                                                     "stack"
+                                                                 ]
+                                                },
+                                       "stack":  {
+                                                     "type":  "Stack",
+                                                     "props":  {
+                                                                   "direction":  "col",
+                                                                   "gap":  "sm"
+                                                               },
+                                                     "children":  [
+                                                                      "t1",
+                                                                      "t2",
+                                                                      "t3",
+                                                                      "t4"
+                                                                  ]
+                                                 },
+                                       "t1":  {
+                                                  "type":  "ListItem",
+                                                  "props":  {
+                                                                "primary":  "File Q2 estimated taxes",
+                                                                "secondary":  "Due Jun 15",
+                                                                "badge":  "5 days",
+                                                                "badgeTone":  "danger"
+                                                            }
+                                              },
+                                       "t2":  {
+                                                  "type":  "ListItem",
+                                                  "props":  {
+                                                                "primary":  "Send invoice #1042 to Acme Co.",
+                                                                "secondary":  "Due Jun 10",
+                                                                "badge":  "Today",
+                                                                "badgeTone":  "warning"
+                                                            }
+                                              },
+                                       "t3":  {
+                                                  "type":  "ListItem",
+                                                  "props":  {
+                                                                "primary":  "Renew LLC registration",
+                                                                "secondary":  "Due Jun 30",
+                                                                "badge":  "20 days",
+                                                                "badgeTone":  "neutral"
+                                                            }
+                                              },
+                                       "t4":  {
+                                                  "type":  "ListItem",
+                                                  "props":  {
+                                                                "primary":  "Reconcile May bookkeeping",
+                                                                "secondary":  "Completed Jun 3",
+                                                                "badge":  "Done",
+                                                                "badgeTone":  "positive",
+                                                                "done":  true
+                                                            }
+                                              }
+                                   }
+                  },
+    "RunwayPanel":  {
+                        "root":  "card",
+                        "elements":  {
+                                         "card":  {
+                                                      "type":  "Card",
+                                                      "props":  {
+                                                                    "title":  "Runway",
+                                                                    "subtitle":  "At current burn rate"
+                                                                },
+                                                      "children":  [
+                                                                       "stack"
+                                                                   ]
+                                                  },
+                                         "stack":  {
+                                                       "type":  "Stack",
+                                                       "props":  {
+                                                                     "direction":  "col",
+                                                                     "gap":  "md"
+                                                                 },
+                                                       "children":  [
+                                                                        "months",
+                                                                        "progress",
+                                                                        "grid",
+                                                                        "projection",
+                                                                        "badge"
+                                                                    ]
+                                                   },
+                                         "months":  {
+                                                        "type":  "Metric",
+                                                        "props":  {
+                                                                      "label":  "Months of runway",
+                                                                      "value":  "8.6 mo",
+                                                                      "hint":  "Cash ÷ monthly burn"
+                                                                  }
+                                                    },
+                                         "progress":  {
+                                                          "type":  "ProgressBar",
+                                                          "props":  {
+                                                                        "value":  8.6,
+                                                                        "max":  12,
+                                                                        "label":  "vs 12-month target",
+                                                                        "tone":  "info"
+                                                                    }
+                                                      },
+                                         "grid":  {
+                                                      "type":  "Grid",
+                                                      "props":  {
+                                                                    "columns":  2,
+                                                                    "gap":  "sm"
+                                                                },
+                                                      "children":  [
+                                                                       "burn",
+                                                                       "cash"
+                                                                   ]
+                                                  },
+                                         "burn":  {
+                                                      "type":  "Metric",
+                                                      "props":  {
+                                                                    "label":  "Monthly burn",
+                                                                    "value":  "$5,600"
+                                                                }
+                                                  },
+                                         "cash":  {
+                                                      "type":  "Metric",
+                                                      "props":  {
+                                                                    "label":  "Cash on hand",
+                                                                    "value":  "$48,250"
+                                                                }
+                                                  },
+                                         "projection":  {
+                                                            "type":  "LineGraph",
+                                                            "props":  {
+                                                                          "points":  [
+                                                                                         48250,
+                                                                                         42650,
+                                                                                         37050,
+                                                                                         31450,
+                                                                                         25850
+                                                                                     ],
+                                                                          "labels":  [
+                                                                                         "Now",
+                                                                                         "+1",
+                                                                                         "+2",
+                                                                                         "+3",
+                                                                                         "+4"
+                                                                                     ],
+                                                                          "color":  "#0ea5e9"
+                                                                      }
+                                                        },
+                                         "badge":  {
+                                                       "type":  "Badge",
+                                                       "props":  {
+                                                                     "label":  "Comfortable",
+                                                                     "tone":  "positive"
+                                                                 }
+                                                   }
+                                     }
+                    },
+    "CashRunwayPanel":  {
+                            "root":  "card",
+                            "elements":  {
+                                             "card":  {
+                                                          "type":  "Card",
+                                                          "props":  {
+                                                                        "title":  "Cash \u0026 Runway",
+                                                                        "subtitle":  "All accounts · current burn"
+                                                                    },
+                                                          "children":  [
+                                                                           "stack"
+                                                                       ]
+                                                      },
+                                             "stack":  {
+                                                           "type":  "Stack",
+                                                           "props":  {
+                                                                         "direction":  "col",
+                                                                         "gap":  "md"
+                                                                     },
+                                                           "children":  [
+                                                                            "top-grid",
+                                                                            "badges",
+                                                                            "progress",
+                                                                            "trend"
+                                                                        ]
+                                                       },
+                                             "top-grid":  {
+                                                              "type":  "Grid",
+                                                              "props":  {
+                                                                            "columns":  2,
+                                                                            "gap":  "sm"
+                                                                        },
+                                                              "children":  [
+                                                                               "total",
+                                                                               "months",
+                                                                               "burn",
+                                                                               "checking"
+                                                                           ]
+                                                          },
+                                             "total":  {
+                                                           "type":  "Metric",
+                                                           "props":  {
+                                                                         "label":  "Total cash",
+                                                                         "value":  "$48,250",
+                                                                         "delta":  "+$3,200 this month",
+                                                                         "trend":  "up"
+                                                                     }
+                                                       },
+                                             "months":  {
+                                                            "type":  "Metric",
+                                                            "props":  {
+                                                                          "label":  "Runway",
+                                                                          "value":  "8.6 mo",
+                                                                          "hint":  "Cash ÷ monthly burn"
+                                                                      }
+                                                        },
+                                             "burn":  {
+                                                          "type":  "Metric",
+                                                          "props":  {
+                                                                        "label":  "Monthly burn",
+                                                                        "value":  "$5,600"
+                                                                    }
+                                                      },
+                                             "checking":  {
+                                                              "type":  "Metric",
+                                                              "props":  {
+                                                                            "label":  "Checking / Savings",
+                                                                            "value":  "$32,100 / $16,150"
+                                                                        }
+                                                          },
+                                             "badges":  {
+                                                            "type":  "Stack",
+                                                            "props":  {
+                                                                          "direction":  "row",
+                                                                          "gap":  "sm"
+                                                                      },
+                                                            "children":  [
+                                                                             "badge-cash",
+                                                                             "badge-runway"
+                                                                         ]
+                                                        },
+                                             "badge-cash":  {
+                                                                "type":  "Badge",
+                                                                "props":  {
+                                                                              "label":  "Cash: Healthy",
+                                                                              "tone":  "positive"
+                                                                          }
+                                                            },
+                                             "badge-runway":  {
+                                                                  "type":  "Badge",
+                                                                  "props":  {
+                                                                                "label":  "Runway: Comfortable",
+                                                                                "tone":  "positive"
+                                                                            }
+                                                              },
+                                             "progress":  {
+                                                              "type":  "ProgressBar",
+                                                              "props":  {
+                                                                            "value":  8.6,
+                                                                            "max":  12,
+                                                                            "label":  "Runway vs 12-month target",
+                                                                            "tone":  "info"
+                                                                        }
+                                                          },
+                                             "trend":  {
+                                                           "type":  "LineGraph",
+                                                           "props":  {
+                                                                         "points":  [
+                                                                                        38000,
+                                                                                        41200,
+                                                                                        39800,
+                                                                                        43500,
+                                                                                        45050,
+                                                                                        48250
+                                                                                    ],
+                                                                         "labels":  [
+                                                                                        "Jan",
+                                                                                        "Feb",
+                                                                                        "Mar",
+                                                                                        "Apr",
+                                                                                        "May",
+                                                                                        "Jun"
+                                                                                    ]
+                                                                     }
+                                                       }
+                                         }
+                        }
+}
