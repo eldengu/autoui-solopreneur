@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'api.dart';
 import 'catalog_screen.dart';
+import 'memory_screen.dart';
 import 'render.dart';
 import 'theme.dart';
 
@@ -206,46 +207,6 @@ class _NavItem extends StatelessWidget {
   }
 }
 
-// ---- placeholder screens (filled in next steps) ---------------------------
-
-class MemoryScreen extends StatelessWidget {
-  const MemoryScreen({super.key});
-  @override
-  Widget build(BuildContext context) => const _Placeholder(
-        icon: Icons.psychology_outlined,
-        title: 'Memory',
-        body: 'Declarative log and procedural scores will appear here.',
-      );
-}
-
-class _Placeholder extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String body;
-  const _Placeholder({required this.icon, required this.title, required this.body});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 40, color: AppColors.mutedForeground),
-          const SizedBox(height: 12),
-          Text(title,
-              style: const TextStyle(
-                  fontSize: 18, fontWeight: FontWeight.w600, color: AppColors.foreground)),
-          const SizedBox(height: 6),
-          Text(body,
-              style: const TextStyle(fontSize: 13, color: AppColors.mutedForeground)),
-          const SizedBox(height: 6),
-          const Text('Coming soon',
-              style: TextStyle(fontSize: 12, color: AppColors.mutedForeground)),
-        ],
-      ),
-    );
-  }
-}
 
 // ---- Chat screen (body-only; lives inside the shell) ----------------------
 

@@ -33,6 +33,13 @@ class CatalogPanel {
   });
 }
 
+/// Two-part memory fetched from the read-only /api/memory endpoint.
+class FinanceMemory {
+  final List<Map<String, dynamic>> declarative;
+  final Map<String, Map<String, num>> procedural;
+  FinanceMemory(this.declarative, this.procedural);
+}
+
 /// Talks to the EXISTING Next.js backend over HTTP. Nothing about the backend
 /// is rebuilt here — this only calls /api/auth/guest and /api/chat.
 class BackendApi {
@@ -76,6 +83,27 @@ class BackendApi {
         spec: (m['spec'] as Map?)?.cast<String, dynamic>() ?? <String, dynamic>{},
       );
     }).toList();
+  }
+
+  /// Fetch the two-part memory (declarative + procedural) read-only.
+  Future<FinanceMemory> fetchMemory() async {
+    await ensureGuest();
+    final res = await _client.get(_uri('/api/memory'));
+    if (res.statusCode != 200) {
+      throw Exception('Memory request failed (${res.statusCode})');
+    }
+    final data = jsonDecode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>;
+    final decl = ((data['declarative'] as List?) ?? const [])
+        .map((e) => (e as Map).cast<String, dynamic>())
+        .toList();
+    final procRaw = (data['procedural'] as Map?)?.cast<String, dynamic>() ?? {};
+    final proc = <String, Map<String, num>>{};
+    procRaw.forEach((k, v) {
+      proc[k] = (v as Map).cast<String, dynamic>().map(
+            (pk, pv) => MapEntry(pk, (pv is num) ? pv : 0),
+          );
+    });
+    return FinanceMemory(decl, proc);
   }
 
   Future<ChatResult> sendMessage(String text) async {
