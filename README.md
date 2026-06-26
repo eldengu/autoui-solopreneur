@@ -116,30 +116,15 @@ node serve.mjs            # serves the build + proxies /api/* to the backend (av
 
 Open **http://localhost:8090**. `serve.mjs` is a small dev harness that hosts the Flutter web build on the backend's origin and establishes the guest session, so the Flutter client just calls `/api/*` the same way the web app does.
 
-| Flutter screen | Screenshot |
-| --- | --- |
-| Chat (panels rendered as Flutter widgets) | `docs/flutter-demo.png`, `docs/flutter-charts.png` |
-| Sidebar nav (Chat / Catalog / Memory) | `docs/flutter-nav-chat.png`, `docs/flutter-nav-catalog.png`, `docs/flutter-nav-memory.png` |
-| Catalog (built-ins + custom) | `docs/flutter-catalog.png`, `docs/flutter-catalog-2.png` |
-| Memory (declarative + procedural) | `docs/flutter-memory.png` |
-| Thumb up/down feedback | `docs/flutter-feedback.png` |
-| Panel remix dialog | `docs/flutter-remix-dialog.png` |
-
-**Chat (panels as Flutter widgets)**
+**Chat (panels rendered as Flutter widgets)**
 
 ![Flutter chat with finance panels](docs/flutter-demo.png)
 
-**Memory (declarative + procedural)**
-
-![Flutter memory screen](docs/flutter-memory.png)
-
-**Catalog (built-ins + custom)**
-
-![Flutter catalog screen](docs/flutter-catalog.png)
-
-**Combine panels (remix dialog)**
+**Combine panels (the "+" remix dialog)**
 
 ![Flutter panel remix dialog](docs/flutter-remix-dialog.png)
+
+The Catalog and Memory screens look the same as the web ones below — the same json-render specs, a different (Flutter) registry.
 
 ---
 
@@ -183,9 +168,7 @@ A full walkthrough: ask **"How are my taxes?"** → panels render → thumb up �
 
 ## Screenshots
 
-**Chat with generated panels**
-
-![Chat with generated finance panels](docs/screenshot-chat.png)
+> The web chat is shown in the **Demo** above; these are the other web screens.
 
 **Memory page (declarative → procedural)**
 
