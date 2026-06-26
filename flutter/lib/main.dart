@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'api.dart';
 import 'catalog_screen.dart';
 import 'memory_screen.dart';
+import 'panel_remix.dart';
 import 'render.dart';
 import 'theme.dart';
 
@@ -265,6 +266,15 @@ class _ChatViewState extends State<ChatView> {
     }
   }
 
+  Future<void> _openRemix() async {
+    final created = await showPanelRemixDialog(context, _api);
+    if (created != null && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Created "$created" — see it on the Catalog tab')),
+      );
+    }
+  }
+
   void _scrollToEnd() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scroll.hasClients) {
@@ -418,6 +428,22 @@ class _ChatViewState extends State<ChatView> {
           constraints: const BoxConstraints(maxWidth: 720),
           child: Row(
             children: [
+              SizedBox(
+                height: 44,
+                width: 44,
+                child: OutlinedButton(
+                  onPressed: _openRemix,
+                  style: OutlinedButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                    side: const BorderSide(color: AppColors.border),
+                    foregroundColor: AppColors.mutedForeground,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14)),
+                  ),
+                  child: const Icon(Icons.add, size: 20),
+                ),
+              ),
+              const SizedBox(width: 8),
               Expanded(
                 child: TextField(
                   controller: _controller,

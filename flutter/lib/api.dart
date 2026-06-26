@@ -106,6 +106,31 @@ class BackendApi {
     return FinanceMemory(decl, proc);
   }
 
+  /// Create a new custom panel by combining sources via the existing endpoint.
+  /// Returns the created panel object ({name, title, ...}) or null on failure.
+  Future<Map<String, dynamic>?> createCustomPanel({
+    required List<String> sourcePanels,
+    required String instruction,
+  }) async {
+    await ensureGuest();
+    final res = await _client.post(
+      _uri('/api/custom-panels'),
+      headers: {'content-type': 'application/json'},
+      body: jsonEncode({
+        'sourcePanels': sourcePanels,
+        'instruction': instruction,
+      }),
+    );
+    if (res.statusCode != 200) {
+      return null;
+    }
+    final data = jsonDecode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>;
+    if (data['ok'] != true) {
+      return null;
+    }
+    return (data['panel'] as Map?)?.cast<String, dynamic>();
+  }
+
   /// Record thumb up/down feedback for a panel via the existing endpoint.
   Future<bool> sendFeedback({
     required String question,
