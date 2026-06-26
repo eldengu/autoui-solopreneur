@@ -1,6 +1,13 @@
-import { customProvider, gateway } from "ai";
+import { createAnthropic } from "@ai-sdk/anthropic";
+import { customProvider } from "ai";
 import { isTestEnvironment } from "../constants";
 import { titleModel } from "./models";
+
+// Talk to Anthropic Claude directly via @ai-sdk/anthropic (not the Vercel AI
+// Gateway). The API key is read from ANTHROPIC_API_KEY in .env.local.
+const anthropic = createAnthropic({
+  apiKey: process.env.ANTHROPIC_API_KEY,
+});
 
 export const myProvider = isTestEnvironment
   ? (() => {
@@ -19,12 +26,12 @@ export function getLanguageModel(modelId: string) {
     return myProvider.languageModel(modelId);
   }
 
-  return gateway.languageModel(modelId);
+  return anthropic(modelId);
 }
 
 export function getTitleModel() {
   if (isTestEnvironment && myProvider) {
     return myProvider.languageModel("title-model");
   }
-  return gateway.languageModel(titleModel.id);
+  return anthropic(titleModel.id);
 }

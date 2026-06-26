@@ -36,6 +36,10 @@ import { generateHashedPassword } from "./utils";
 const client = postgres(process.env.POSTGRES_URL ?? "");
 const db = drizzle(client);
 
+// When no Postgres is configured, chat-history persistence is disabled so the
+// chat UI works without a database. Persistence will move to memory.json later.
+const hasDatabase = Boolean(process.env.POSTGRES_URL);
+
 export async function getUser(email: string): Promise<User[]> {
   try {
     return await db.select().from(user).where(eq(user.email, email));
@@ -85,6 +89,9 @@ export async function saveChat({
   title: string;
   visibility: VisibilityType;
 }) {
+  if (!hasDatabase) {
+    return;
+  }
   try {
     return await db.insert(chat).values({
       id,
@@ -225,6 +232,9 @@ export async function getChatsByUserId({
 }
 
 export async function getChatById({ id }: { id: string }) {
+  if (!hasDatabase) {
+    return null;
+  }
   try {
     const [selectedChat] = await db.select().from(chat).where(eq(chat.id, id));
     if (!selectedChat) {
@@ -238,6 +248,9 @@ export async function getChatById({ id }: { id: string }) {
 }
 
 export async function saveMessages({ messages }: { messages: DBMessage[] }) {
+  if (!hasDatabase) {
+    return;
+  }
   try {
     return await db.insert(message).values(messages);
   } catch (_error) {
@@ -260,6 +273,9 @@ export async function updateMessage({
 }
 
 export async function getMessagesByChatId({ id }: { id: string }) {
+  if (!hasDatabase) {
+    return [];
+  }
   try {
     return await db
       .select()
@@ -567,6 +583,9 @@ export async function getMessageCountByUserId({
   id: string;
   differenceInHours: number;
 }) {
+  if (!hasDatabase) {
+    return 0;
+  }
   try {
     const cutoffTime = new Date(
       Date.now() - differenceInHours * 60 * 60 * 1000
