@@ -18,6 +18,20 @@ class ChatResult {
   ChatResult({this.summary, this.text, this.specs = const []});
 }
 
+/// One catalog entry: a panel that's available to the app (built-in or custom).
+class CatalogPanel {
+  final String name;
+  final String title;
+  final bool custom;
+  final Map<String, dynamic> spec;
+  CatalogPanel({
+    required this.name,
+    required this.title,
+    required this.custom,
+    required this.spec,
+  });
+}
+
 /// Talks to the EXISTING Next.js backend over HTTP. Nothing about the backend
 /// is rebuilt here — this only calls /api/auth/guest and /api/chat.
 class BackendApi {
@@ -41,6 +55,26 @@ class BackendApi {
       // The browser stores the cookie even if the redirect target differs.
     }
     _guestReady = true;
+  }
+
+  /// Fetch all available panels (built-ins + custom) with their specs.
+  Future<List<CatalogPanel>> fetchCatalog() async {
+    await ensureGuest();
+    final res = await _client.get(_uri('/api/custom-panels'));
+    if (res.statusCode != 200) {
+      throw Exception('Catalog request failed (${res.statusCode})');
+    }
+    final data = jsonDecode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>;
+    final list = (data['panels'] as List?) ?? const [];
+    return list.map((p) {
+      final m = (p as Map).cast<String, dynamic>();
+      return CatalogPanel(
+        name: m['name']?.toString() ?? '',
+        title: m['title']?.toString() ?? '',
+        custom: m['custom'] == true,
+        spec: (m['spec'] as Map?)?.cast<String, dynamic>() ?? <String, dynamic>{},
+      );
+    }).toList();
   }
 
   Future<ChatResult> sendMessage(String text) async {

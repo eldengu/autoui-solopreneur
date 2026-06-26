@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'api.dart';
+import 'catalog_screen.dart';
 import 'render.dart';
 import 'theme.dart';
 
@@ -206,16 +207,6 @@ class _NavItem extends StatelessWidget {
 }
 
 // ---- placeholder screens (filled in next steps) ---------------------------
-
-class CatalogScreen extends StatelessWidget {
-  const CatalogScreen({super.key});
-  @override
-  Widget build(BuildContext context) => const _Placeholder(
-        icon: Icons.grid_view_rounded,
-        title: 'Catalog',
-        body: 'The panel gallery will appear here.',
-      );
-}
 
 class MemoryScreen extends StatelessWidget {
   const MemoryScreen({super.key});
